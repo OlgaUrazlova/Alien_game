@@ -1,13 +1,13 @@
 import pygame
-from pygame.sprite import Sprite
+from pygame.sprite import Sprite, AbstractGroup
 
 
 class Bullet(Sprite):
     """Класс для управления снарядами"""
 
-    def __init__(self, ai_game):
+    def __init__(self, ai_game, *groups: AbstractGroup):
         """Создать снаряды в текущей позиции корабля"""
-        super.__init__()
+        super().__init__(*groups)
         self.screen = ai_game.screen
         self.settings = ai_game.settings
         self.color = self.settings.bullet_color
