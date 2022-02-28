@@ -9,3 +9,4 @@ class Settings():
         self.bullet_height = 5
         self.bullet_color = (255, 0, 0)
         self.bullet_allowed = 5
+        self.alien_speed = 1.0
