@@ -124,16 +124,27 @@ class AlienInvasion:
 
     def _ship_hit(self):
         """Обработка столкновение пришельца и корабля"""
-        self.stats.ship_left = -1
+        if self.stats.ships_left > 0:
+            self.stats.ships_left = -1
 
-        self.aliens.empty()
-        self.bullets.empty()
+            self.aliens.empty()
+            self.bullets.empty()
 
-        self._create_fleet()
-        self.ship.center_ship()
+            self._create_fleet()
+            self.ship.center_ship()
+            # Пауза
+            sleep(0.5)
 
-        # Пауза
-        sleep(0.5)
+        else:
+            self.stats.game_active = False
+
+    def _check_aliens_bottom(self):
+        """Проверяем положение пришельца у нижнего края"""
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                self._ship_hit()
+                break
 
     def _update_aliens(self):
         self._check_fleet_edges()
@@ -142,6 +153,8 @@ class AlienInvasion:
         # Проверка столкновения пришельца и корабля
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
+
+        self._check_aliens_bottom()
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
@@ -156,9 +169,12 @@ class AlienInvasion:
         """Запуск основного цикла игры"""
         while True:
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
-            self._update_aliens()
+
+            if self.stats.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_aliens()
+
             self._update_screen()
 
 
